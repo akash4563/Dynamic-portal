@@ -1,0 +1,46 @@
+{
+    "categories": [
+        {
+            "id": 1,
+            "title": "Vendors Portal",
+            "links": [
+                {
+                    "title": "Vendor A Login",
+                    "url": "#vendor-a"
+                },
+                {
+                    "title": "Vendor B Dashboard",
+                    "url": "#vendor-b"
+                }
+            ]
+        },
+        {
+            "id": 2,
+            "title": "Excel Sheet",
+            "links": [
+                {
+                    "title": "Monthly Reports",
+                    "url": "#monthly-reports"
+                },
+                {
+                    "title": "Budget Tracking",
+                    "url": "#budget-tracking"
+                }
+            ]
+        },
+        {
+            "id": 3,
+            "title": "Internal Tool",
+            "links": [
+                {
+                    "title": "Employee Directory",
+                    "url": "#employee-directory"
+                },
+                {
+                    "title": "Leave Management",
+                    "url": "#leave-management"
+                }
+            ]
+        }
+    ]
+}
