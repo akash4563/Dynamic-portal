@@ -17,23 +17,46 @@ def save_data(data):
     with open(DATA_FILE, 'w') as f:
         json.dump(data, f, indent=4)
 
-def update_link(category_title, link_title, new_url):
+def add_or_update_link(category_title, link_title, new_url):
     data = load_data()
-    updated = False
 
-    for category in data.get('categories', []):
+    if 'categories' not in data:
+        data['categories'] = []
+
+    target_category = None
+    for category in data['categories']:
         if category['title'].lower() == category_title.lower():
-            for link in category.get('links', []):
-                if link['title'].lower() == link_title.lower():
-                    link['url'] = new_url
-                    updated = True
-                    break
+            target_category = category
+            break
 
-    if updated:
-        save_data(data)
-        print(f"Successfully updated '{link_title}' in '{category_title}' to '{new_url}'.")
+    if not target_category:
+        target_category = {
+            "id": len(data['categories']) + 1,
+            "title": category_title,
+            "links": []
+        }
+        data['categories'].append(target_category)
+
+    if 'links' not in target_category:
+        target_category['links'] = []
+
+    link_updated = False
+    for link in target_category['links']:
+        if link['title'].lower() == link_title.lower():
+            link['url'] = new_url
+            link_updated = True
+            break
+
+    if not link_updated:
+        target_category['links'].append({
+            "title": link_title,
+            "url": new_url
+        })
+        print(f"Successfully added '{link_title}' to '{category_title}' with URL '{new_url}'.")
     else:
-        print(f"Failed to find '{link_title}' in '{category_title}'.")
+        print(f"Successfully updated '{link_title}' in '{category_title}' to '{new_url}'.")
+
+    save_data(data)
 
 if __name__ == "__main__":
     if len(sys.argv) != 4:
@@ -44,4 +67,4 @@ if __name__ == "__main__":
     link_title = sys.argv[2]
     new_url = sys.argv[3]
 
-    update_link(cat_title, link_title, new_url)
+    add_or_update_link(cat_title, link_title, new_url)

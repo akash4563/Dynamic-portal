@@ -1,10 +1,23 @@
 #!/bin/bash
+# Shell script to orchestrate updates using the python backend
+# This script can be run on a cron job or manually
 
-echo "Starting automated portal updates..."
+echo "Starting data update process..."
 
-# Example of updating data.json using the python script
-# This could be triggered by a cron job
-python3 update_data.py "Vendors Portal" "Vendor A Login" "https://vendor-a.example.com"
-python3 update_data.py "Internal Tool" "Leave Management" "https://leave.example.com"
+# Check if python3 is available
+if command -v python3 &>/dev/null; then
+    PYTHON_CMD="python3"
+elif command -v python &>/dev/null; then
+    PYTHON_CMD="python"
+else
+    echo "Error: Python is not installed or not in PATH."
+fi
 
-echo "Portal updates completed."
+# Run the python script to update data
+$PYTHON_CMD update_data.py "System Status" "New Alert" "#alert" "Storage Tools"
+
+if [ $? -eq 0 ]; then
+    echo "Data update completed successfully."
+else
+    echo "Error: Data update failed."
+fi

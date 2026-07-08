@@ -41,6 +41,76 @@
                     "url": "#leave-management"
                 }
             ]
+        },
+        {
+            "id": 4,
+            "title": "Storage Tools",
+            "links": [
+                {
+                    "title": "Tool 1",
+                    "url": "#"
+                }
+            ]
+        },
+        {
+            "id": 5,
+            "title": "Service Now",
+            "links": [
+                {
+                    "title": "Link 1",
+                    "url": "#"
+                }
+            ]
+        },
+        {
+            "id": 6,
+            "title": "Sharepoint Links",
+            "links": [
+                {
+                    "title": "Link 1",
+                    "url": "#"
+                }
+            ]
+        },
+        {
+            "id": 7,
+            "title": "Disaster Recovery",
+            "links": [
+                {
+                    "title": "Link 1",
+                    "url": "#"
+                }
+            ]
+        },
+        {
+            "id": 8,
+            "title": "Storage Discovery",
+            "links": [
+                {
+                    "title": "Link 1",
+                    "url": "#"
+                }
+            ]
+        },
+        {
+            "id": 9,
+            "title": "Inventory",
+            "links": [
+                {
+                    "title": "Link 1",
+                    "url": "#"
+                }
+            ]
+        },
+        {
+            "id": 10,
+            "title": "Firmware Version",
+            "links": [
+                {
+                    "title": "Link 1",
+                    "url": "#"
+                }
+            ]
         }
     ]
 }
