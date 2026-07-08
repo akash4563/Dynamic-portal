@@ -1,11 +1,14 @@
 <?php
 include 'auth.php';
 
+// Ensure the CSRF cookie is set before any HTML is sent to the client
+$csrf_token_val = getCsrfToken();
+
 $error = '';
 $success = '';
 
 if (isset($_GET['action']) && $_GET['action'] == 'logout') {
-    session_destroy();
+    setcookie('auth_token', '', time() - 3600, '/');
     header("Location: index.php");
     exit;
 }
@@ -26,7 +29,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $stored_hash = getenv('ADMIN_PASSWORD_HASH') ?: '$2y$10$HLclfGxQG6nbY1UnlcqVIuYU2uUHVYtZhzPOugymTQ3Cgr.rhxVba';
 
         if ($username === $stored_user && password_verify($password, $stored_hash)) {
-            $_SESSION['logged_in'] = true;
+            $cookie_val = generateAuthCookie($username);
+            setcookie('auth_token', $cookie_val, time() + 86400, '/');
             header("Location: admin.php");
             exit;
         } else {
@@ -42,7 +46,7 @@ include 'header.php';
     <form method="POST" action="login.php">
         <h2 style="text-align:center; margin-top:0;">Admin Login</h2>
         <?php if ($error) echo "<p class='error'>$error</p>"; ?>
-        <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars(getCsrfToken()); ?>">
+        <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($csrf_token_val); ?>">
         <label for="username">Username:</label>
         <input type="text" id="username" name="username" required>
 

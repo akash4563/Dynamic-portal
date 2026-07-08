@@ -1,8 +1,11 @@
-<?php include 'header.php'; ?>
+<?php
+require_once 'data_store.php';
+include 'header.php';
+?>
 
 <div class="card-container">
     <?php
-    $json_data = file_get_contents('data.json');
+    $json_data = getPortalData();
     $data = json_decode($json_data, true);
 
     if ($data && isset($data['categories'])) {

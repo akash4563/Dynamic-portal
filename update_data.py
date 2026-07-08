@@ -1,10 +1,27 @@
 import json
 import os
 import sys
+import urllib.request
+import urllib.error
 
 DATA_FILE = 'data.json'
+KV_URL = os.environ.get('KV_REST_API_URL')
+KV_TOKEN = os.environ.get('KV_REST_API_TOKEN')
 
 def load_data():
+    if KV_URL and KV_TOKEN:
+        try:
+            req = urllib.request.Request(f"{KV_URL}/get/portal_data")
+            req.add_header('Authorization', f"Bearer {KV_TOKEN}")
+            with urllib.request.urlopen(req) as response:
+                res_data = json.loads(response.read().decode())
+                if 'result' in res_data and res_data['result'] is not None:
+                    parsed = json.loads(res_data['result'])
+                    return parsed
+        except Exception as e:
+            print(f"Error reading from KV: {e}")
+            pass
+
     if not os.path.exists(DATA_FILE):
         return {"categories": []}
     with open(DATA_FILE, 'r') as f:
@@ -14,6 +31,19 @@ def load_data():
             return {"categories": []}
 
 def save_data(data):
+    if KV_URL and KV_TOKEN:
+        try:
+            payload = json.dumps(json.dumps(data)).encode('utf-8')
+            req = urllib.request.Request(f"{KV_URL}/set/portal_data", data=payload, method='POST')
+            req.add_header('Authorization', f"Bearer {KV_TOKEN}")
+            req.add_header('Content-Type', 'text/plain')
+            with urllib.request.urlopen(req) as response:
+                if response.status >= 200 and response.status < 300:
+                    return
+        except Exception as e:
+            print(f"Error saving to KV: {e}")
+            pass
+
     with open(DATA_FILE, 'w') as f:
         json.dump(data, f, indent=4)
 

@@ -1,7 +1,5 @@
 <?php
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
+require_once 'auth.php';
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -60,7 +58,7 @@ if (session_status() === PHP_SESSION_NONE) {
                         <a href="#">Link 1</a>
                     </div>
                 </li>
-                <?php if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true): ?>
+                <?php if (isLoggedIn()): ?>
                     <li class="dropdown">
                         <a href="#" class="dropbtn">Admin <span class="caret">▼</span></a>
                         <div class="dropdown-content">

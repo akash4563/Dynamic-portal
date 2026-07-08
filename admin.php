@@ -1,9 +1,16 @@
 <?php
 include 'auth.php';
-requireLogin();
+require_once 'data_store.php';
+
+if (!isLoggedIn()) {
+    header("Location: login.php");
+    exit;
+}
+
+// Ensure the CSRF cookie is set before any HTML is sent to the client
+$csrf_token_val = getCsrfToken();
 
 $message = '';
-$dataFile = 'data.json';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $csrf_token = $_POST['csrf_token'] ?? '';
@@ -14,10 +21,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if (isset($_POST['json_data'])) {
             $newData = json_decode($_POST['json_data'], true);
             if (json_last_error() === JSON_ERROR_NONE) {
-                if (file_put_contents($dataFile, json_encode($newData, JSON_PRETTY_PRINT))) {
+                if (savePortalData(json_encode($newData, JSON_PRETTY_PRINT))) {
                     $message = "<p class='success'>Data successfully updated!</p>";
                 } else {
-                    $message = "<p class='error'>Error writing to file.</p>";
+                    $message = "<p class='error'>Error saving data. If using KV, check your API token.</p>";
                 }
             } else {
                 $message = "<p class='error'>Invalid JSON format provided!</p>";
@@ -26,7 +33,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 }
 
-$currentData = file_get_contents($dataFile);
+$currentData = getPortalData();
 
 include 'header.php';
 ?>
@@ -38,7 +45,7 @@ include 'header.php';
     <?php echo $message; ?>
 
     <form method="POST" action="admin.php" style="max-width: 100%;">
-        <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars(getCsrfToken()); ?>">
+        <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($csrf_token_val); ?>">
         <label for="json_data">Portal Data (JSON format):</label>
         <textarea id="json_data" name="json_data" rows="20" style="font-family: monospace;"><?php echo htmlspecialchars($currentData); ?></textarea>
 
